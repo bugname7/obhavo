@@ -10,10 +10,26 @@ function App() {
 
   function validate() {
     if (name.length < 3) {
-      alert("shahar nomi juda qisqa");
+      alert("Shahar nomi juda qisqa");
       return false;
     }
     return true;
+  }
+
+  // Ob-havo holatini o'zbekchaga tarjima qilish funksiyasi
+  function translateWeather(description) {
+    const translations = {
+      "clear sky": "Ochiq osmon",
+      "few clouds": "Biroz bulutli",
+      "scattered clouds": "Sochilgan bulutlar",
+      "broken clouds": "Bulutli",
+      "shower rain": "Jala yomg'ir",
+      "rain": "Yomg'ir",
+      "thunderstorm": "Momoqaldiroq",
+      "snow": "Qor",
+      "mist": "Tuman",
+    };
+    return translations[description] || "Noma'lum ob-havo";
   }
 
   function handleSearch(event) {
@@ -28,7 +44,7 @@ function App() {
           const newWeather = response.data;
 
           if (weatherList.some((weather) => weather.name === newWeather.name)) {
-            alert("bu shahar mavjud");
+            alert("Bu shahar allaqachon mavjud");
           } else {
             setWeatherList([...weatherList, newWeather]);
           }
@@ -36,6 +52,7 @@ function App() {
         })
         .catch((error) => {
           console.log(error);
+          alert("Shahar nomi noto‘g‘ri yoki xato yuz berdi");
         });
     }
   }
@@ -49,14 +66,14 @@ function App() {
     <div>
       <div className="container">
         <div className="form">
-          <h2>Ob havo</h2>
+          <h2>Ob-havo ma'lumotlari</h2>
           <form>
             <input
               className="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Shahar nomi"
+              placeholder="Shahar nomini kiriting"
             />
             <button className="btnSearch" onClick={handleSearch}>
               Qidirish
@@ -70,6 +87,10 @@ function App() {
               <p>Harorat: {weather.main.temp} °C</p>
               <p>Namlik: {weather.main.humidity}%</p>
               <p>Shamol tezligi: {weather.wind.speed} m/s</p>
+              <p>
+                Ob-havo holati:{" "}
+                {translateWeather(weather.weather[0].description)}
+              </p>
               <button className="btnClear" onClick={() => handleRemove(index)}>
                 O'chirish
               </button>
